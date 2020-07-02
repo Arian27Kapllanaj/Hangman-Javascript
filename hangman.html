@@ -80,7 +80,7 @@
 
         // Display the word inside the text box
         frm.WordBox.value = words[rnd];
-
+        
         }     
 
 </script>
@@ -88,7 +88,7 @@
 <button onclick="changeImg()">Next</button>
 <br><br>
 
-<img name="slide" width="800" height="500">
+<img name="slide" width="700" height="400">
 
 <!-- Random word html-->
 <h1>Random Word</h1>
@@ -98,11 +98,35 @@
 </form>
 
 <!-- Alphabet List-->
-<script>
-    document.write("Alphabet List: \n");
-    //working in progress
+
+    <h4>Alphabet List:</h4>
+    <button id="letters" onclick="checkLetter()">A</button>
+    <script>    //testing deleting letters by clicking on it
+        function checkLetter() {
+            document.getElementById('letters').style.display = 'none';
+        }
+    </script>
+    <button id="letters2" onclick="checkLetter2()">B</button>
     
-</script>
+    <script>    //testing deleting letters by clicking on it
+        function checkLetter2() {
+            document.getElementById('letters2').style.display = 'none';
+        }
+    </script>
+    <br>
+    <!-- another test-->
+    <button id="test" onclick="genCharArray(charA, charZ)">testing</button>
+    <script>
+        function genCharArray(charA, charZ) {
+    var a = [], i = charA.charCodeAt(0), j = charZ.charCodeAt(0);
+    for (; i <= j; ++i) {
+        a.push(String.fromCharCode(i));
+    }
+    return a;
+    }
+    genCharArray('a', 'z');
+    </script>
+
 </body>
 </html>
 
