@@ -7,8 +7,8 @@
 <script>
 
     // changing images
-    var i = 0;
-    var images = [i];
+    var imageloop = 0;
+    var images = [imageloop];
 
     //images list
     images[0] = 'image1.jpg';
@@ -21,18 +21,18 @@
 
     //change Image function
     function changeImg() {
-        document.slide.src = images[i];
+        document.slide.src = images[imageloop];
 
-        if(i < images.length - 1) {
+        if(imageloop < images.length - 1) {
             //generating the random word
-            if(i == 0) {
+            if(imageloop == 0) {
                 //PickRandomWord(document.WordForm);
             }
 
-            i++
+            imageloop++
         } 
             else {
-                i = 0;
+                imageloop = 0;
             }
 
         }
@@ -46,6 +46,7 @@ let invalidLetters = [];
 let gameOver = false;
 
 function startOver() {
+    imageloop = 0;
     gameOver = false;
     validLetters = [];
     invalidLetters = [];
@@ -53,7 +54,6 @@ function startOver() {
     document.getElementById("result").innerHTML = "";
     displaySecretWord();
     displayLetters();
-    drawCanvas();
 }
 
 function displaySecretWord() {
@@ -103,6 +103,7 @@ function playLetter(i) {
     }
     else {
         invalidLetters.push(ch);
+        imageloop++;
     }
 
     displaySecretWord();
@@ -116,15 +117,37 @@ function checkIfFound() {
     let w = document.getElementById("word").innerHTML;
     w = w.replace(/\s/g, '');
     if(word == w) {
-        document.getElementById("result").innerHTML = "FOUND!";
+        alert("YOU WON");
         gameOver = true;
         displayLetters();
     }
     else if(invalidLetters.length >= 6) {
-        document.getElementById("result").innerHTML = "LOST!";
+        alert("GAME OVER");
         gameOver = true;
         displayLetters();
+        imageloop=0;
     }
+}
+
+let wrong = invalidLetters.length;
+
+switch (wrong) {
+
+    case 1: images[0];
+
+    case 2: images[1];
+
+    case 3: images[2];
+
+    case 4: changeImg();
+    imageloop += 1;
+
+    case 5: changeImg();
+    imageloop += 1;
+
+    case 6: changeImg();
+    imageloop += 1;
+
 }
 
 </script>
