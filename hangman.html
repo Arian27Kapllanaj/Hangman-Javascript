@@ -5,7 +5,7 @@
     <body>
     <link rel="stylesheet" type="text/css" href="style.css">
 <script>
-      
+
     // changing images
     var i = 0;
     var images = [i];
@@ -18,7 +18,7 @@
     images[4] = 'image5.jpg';
     images[5] = 'image6.jpg';
     images[6] = 'image7.jpg';
-   
+
     //change Image function
     function changeImg() {
         document.slide.src = images[i];
@@ -26,108 +26,121 @@
         if(i < images.length - 1) {
             //generating the random word
             if(i == 0) {
-                PickRandomWord(document.WordForm);
+                //PickRandomWord(document.WordForm);
             }
 
             i++
         } 
             else {
                 i = 0;
-                alert("GAME OVER");
             }
 
         }
-         
+
          window.onload = changeImg;
+//words
+let words = ["csharp", "cpp", "java", "html", "professor", "teacher", "javascript", "css", "php", "laravel", "react", "angular", "bootstrap"];
+let word = "";
+let validLetters = [];
+let invalidLetters = [];
+let gameOver = false;
 
-        //random number js
-        var NumberOfWords = 14;
+function startOver() {
+    gameOver = false;
+    validLetters = [];
+    invalidLetters = [];
+    word = words[Math.floor(Math.random() * words.length)];
+    document.getElementById("result").innerHTML = "";
+    displaySecretWord();
+    displayLetters();
+    drawCanvas();
+}
 
-        var words = new BuildArray(NumberOfWords)
-
-        // Use the following variables to 
-        // define your random words:
-        words[1] = "friendly";
-        words[2] = "javascript";
-        words[3] = "computer";
-        words[4] = "programming";
-        words[5] = "laravel";
-        words[6] = "html";
-        words[7] = "css";
-        words[8] = "csharp";
-        words[9] = "cpp";
-        words[10] = "java";
-        words[11] = "ruby";
-        words[12] = "database";
-        words[13] = "professor";
-        words[14] = "teacher";
-
-        var alphabet = new BuildArray(alphabetList)
-        alphabet[1] = "A";
-        alphabet[2] = "B";
-       
-
-        function BuildArray(size){
-        this.length = size;
-        for (var i = 1; i <= size; i++){
-        this[i] = null}
-        return this;
+function displaySecretWord() {
+    let d = document.getElementById("word");
+    let txt = word.charAt(0);
+    for (var i = 1; i < word.length-1; i++) {
+        if(validLetters.includes(word.charAt(i))) {
+            txt += ' ' + word.charAt(i)
         }
+        else {
+            txt += ' _ ';
+        }
+    }
+    txt += ' ' + word.charAt(word.length-1);
+    d.innerHTML = txt;
+}
 
-        function PickRandomWord(frm) {
-        // Generate a random number between 1 and NumberOfWords
-        var rnd = Math.ceil(Math.random() * NumberOfWords);
+function displayLetters() {
+    let txt = "";
+    for(let i = 97; i < 123; i++) {
+        let ch = String.fromCharCode(i);
+        if(validLetters.includes(ch)) {
+            txt += "<span class='valid-letter'>" + ch + "</span> ";
+        }
+        else if(invalidLetters.includes(ch)) {
+            txt += "<span class='invalid-letter'>" + ch + "</span> ";
+        }
+        else if(gameOver) {
+            txt += "<span>" + ch + "</span> ";
+        }
+        else {
+            txt += "<a href='#' onclick='playLetter(" + i + ");'>" + ch + "</a> ";
+        }
+    }
+    document.getElementById("letter-list").innerHTML = txt;
+}
 
-        // Display the word inside the text box
-        frm.WordBox.value = words[rnd];
-        
-        }     
+
+function playLetter(i) {
+    ch = String.fromCharCode(i);
+    if(validLetters.includes(ch) || invalidLetters.includes(ch)) {
+        return;
+    }
+
+    if(word.includes(ch)) {
+        validLetters.push(ch);
+    }
+    else {
+        invalidLetters.push(ch);
+    }
+
+    displaySecretWord();
+    displayLetters();
+
+    checkIfFound();
+}
+
+
+function checkIfFound() {
+    let w = document.getElementById("word").innerHTML;
+    w = w.replace(/\s/g, '');
+    if(word == w) {
+        document.getElementById("result").innerHTML = "FOUND!";
+        gameOver = true;
+        displayLetters();
+    }
+    else if(invalidLetters.length >= 6) {
+        document.getElementById("result").innerHTML = "LOST!";
+        gameOver = true;
+        displayLetters();
+    }
+}
 
 </script>
 <!-- Next Button-->
 <button onclick="changeImg()">Next</button>
 <br><br>
 
-<img name="slide" width="700" height="400">
+<img name="slide" width="800" height="500">
 
-<!-- Random word html-->
-<h1>Random Word</h1>
+<h1>Hangman</h1>
+<div><button id="startOver" onclick="startOver()">Start</button></div>
 
-<form name="WordForm">  
-<input type=text name="WordBox" id="wordbox">
-</form>
+<div id="word"></div>
+<div id="letter-list"></div>
 
-<!-- Alphabet List-->
-
-    <h4>Alphabet List:</h4>
-    <button id="letters" onclick="checkLetter()">A</button>
-    <script>    //testing deleting letters by clicking on it
-        function checkLetter() {
-            document.getElementById('letters').style.display = 'none';
-        }
-    </script>
-    <button id="letters2" onclick="checkLetter2()">B</button>
-    
-    <script>    //testing deleting letters by clicking on it
-        function checkLetter2() {
-            document.getElementById('letters2').style.display = 'none';
-        }
-    </script>
-    <br>
-    <!-- another test-->
-    <button id="test" onclick="genCharArray(charA, charZ)">testing</button>
-    <script>
-        function genCharArray(charA, charZ) {
-            var a = [], i = charA.charCodeAt(0), j = charZ.charCodeAt(0);
-            for (; i <= j; ++i) {
-                a.push(String.fromCharCode(i));
-            }
-            return a;
-            }
-            genCharArray('a', 'z');
-    </script>
-
+<div id="result"></div>
 </body>
 </html>
 
-  
