@@ -21,15 +21,16 @@
 
     //change Image function
     function changeImg() {
+        //wrong += 1;
         document.slide.src = images[imageloop];
 
         if(imageloop < images.length - 1) {
-            //generating the random word
+
             if(imageloop == 0) {
-                //PickRandomWord(document.WordForm);
+                images[0];
             }
 
-            imageloop++
+            //imageloop++
         } 
             else {
                 imageloop = 0;
@@ -103,7 +104,8 @@ function playLetter(i) {
     }
     else {
         invalidLetters.push(ch);
-        imageloop++;
+        imageloop += 1;
+        changeImg();
     }
 
     displaySecretWord();
@@ -125,30 +127,9 @@ function checkIfFound() {
         alert("GAME OVER");
         gameOver = true;
         displayLetters();
-        imageloop=0;
     }
 }
 
-let wrong = invalidLetters.length;
-
-switch (wrong) {
-
-    case 1: images[0];
-
-    case 2: images[1];
-
-    case 3: images[2];
-
-    case 4: changeImg();
-    imageloop += 1;
-
-    case 5: changeImg();
-    imageloop += 1;
-
-    case 6: changeImg();
-    imageloop += 1;
-
-}
 
 </script>
 <!-- Next Button-->
@@ -166,4 +147,3 @@ switch (wrong) {
 <div id="result"></div>
 </body>
 </html>
-
