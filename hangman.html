@@ -21,7 +21,6 @@
 
     //change Image function
     function changeImg() {
-        //wrong += 1;
         document.slide.src = images[imageloop];
 
         if(imageloop < images.length - 1) {
@@ -30,7 +29,6 @@
                 images[0];
             }
 
-            //imageloop++
         } 
             else {
                 imageloop = 0;
@@ -39,6 +37,7 @@
         }
 
          window.onload = changeImg;
+
 //words
 let words = ["csharp", "cpp", "java", "html", "professor", "teacher", "javascript", "css", "php", "laravel", "react", "angular", "bootstrap"];
 let word = "";
@@ -59,6 +58,7 @@ function startOver() {
     changeImg();
 }
 
+
 function displaySecretWord() {
     let d = document.getElementById("word");
     let txt = word.charAt(0);
@@ -73,6 +73,7 @@ function displaySecretWord() {
     txt += ' ' + word.charAt(word.length-1);
     d.innerHTML = txt;
 }
+
 
 function displayLetters() {
     let txt = "";
@@ -132,13 +133,10 @@ function checkIfFound() {
     }
 }
 
-
 </script>
-<!-- Next Button-->
-
+<h1>Hangman</h1>
 <img name="slide" width="800" height="500">
 
-<h1>Hangman</h1>
 <div><button id="startOver" onclick="startOver()">Start</button></div>
 
 <div id="word"></div>
