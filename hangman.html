@@ -1,9 +1,10 @@
-<html>
+<!doctype html>
+<html lang="en">
     <head>
         <title>Hangman Game</title>
     </head>
     <body>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 <script>
 
     // changing images
@@ -138,19 +139,31 @@ function checkIfFound() {
 <h1 class="title">Hangman</h1>
 <style>
     .title{
+    color:orange;
     text-align: center;
     background-color: green;
 }
 </style>
 <br>
+<div class="container">
+    
 <img name="slide" width="800" height="500">
 <br>
+
 <div><button id="startOver" onclick="startOver()">Start</button></div>
+
 
 <div id="word"></div>
 <div id="letter-list"></div>
 
 <div id="result"></div>
 
+
+</div>
 </body>
+<style>
+    body{
+        background-color:yellowgreen;
+    }
+</style>
 </html>
