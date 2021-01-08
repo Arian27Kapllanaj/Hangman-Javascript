@@ -1,192 +1,185 @@
 <!doctype html>
 <html lang="en">
-    <head>
-        <title>Hangman Game</title>
-    </head>
-    <body>
+
+<head>
+    <title>Hangman Game</title>
+</head>
+
+<body>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-<script>
+    <script>
+        // changing images
+        var imageloop = 0;
+        var images = [imageloop];
 
-    // changing images
-    var imageloop = 0;
-    var images = [imageloop];
+        //images list
+        images[0] = 'image1.jpg';
+        images[1] = 'image2.jpg';
+        images[2] = 'image3.jpg';
+        images[3] = 'image4.jpg';
+        images[4] = 'image5.jpg';
+        images[5] = 'image6.jpg';
+        images[6] = 'image7.jpg';
 
-    //images list
-    images[0] = 'image1.jpg';
-    images[1] = 'image2.jpg';
-    images[2] = 'image3.jpg';
-    images[3] = 'image4.jpg';
-    images[4] = 'image5.jpg';
-    images[5] = 'image6.jpg';
-    images[6] = 'image7.jpg';
+        //change Image function
+        function changeImg() {
+            document.slide.src = images[imageloop];
 
-    //change Image function
-    function changeImg() {
-        document.slide.src = images[imageloop];
+            if (imageloop < images.length - 1) {
 
-        if(imageloop < images.length - 1) {
+                if (imageloop == 0) {
+                    images[0];
+                }
 
-            if(imageloop == 0) {
-                images[0];
-            }
-
-        } 
-            else {
+            } else {
                 imageloop = 0;
             }
 
         }
 
-         window.onload = changeImg;
+        window.onload = changeImg;
 
-let validLetters = [];
-let invalidLetters = [];
-let gameOver = false;
+        let validLetters = [];
+        let invalidLetters = [];
+        let gameOver = false;
 
-function startOver() {
-    imageloop = 0;
-    gameOver = false;
-    validLetters = [];
-    invalidLetters = [];
-    let request = new XMLHttpRequest()
-    request.open('GET', 'https://random-word-api.herokuapp.com/word?number=1', true)
-    request.onload = function () {
-        let data = JSON.parse(this.response)
-        if (request.status >= 200 && request.status < 400) {
-            word = data[0];
-    document.getElementById("result").innerHTML = "";
-    displaySecretWord();
-    displayLetters();
-    imageloop=0;
-    changeImg();
+        function startOver() {
+            imageloop = 0;
+            gameOver = false;
+            validLetters = [];
+            invalidLetters = [];
+            let request = new XMLHttpRequest()
+            request.open('GET', 'https://random-word-api.herokuapp.com/word?number=1', true)
+            request.onload = function() {
+                let data = JSON.parse(this.response)
+                if (request.status >= 200 && request.status < 400) {
+                    word = data[0];
+                    document.getElementById("result").innerHTML = "";
+                    displaySecretWord();
+                    displayLetters();
+                    imageloop = 0;
+                    changeImg();
+                } else {
+                    alert("Error");
+                }
+            };
+            request.send();
         }
-        else {
-            alert("Error");
+
+
+        function displaySecretWord() {
+            let d = document.getElementById("word");
+            let txt = word.charAt(0);
+            for (var i = 1; i < word.length - 1; i++) {
+                if (validLetters.includes(word.charAt(i))) {
+                    txt += ' ' + word.charAt(i)
+                } else {
+                    txt += ' _ ';
+                }
+            }
+            txt += ' ' + word.charAt(word.length - 1);
+            d.innerHTML = txt;
         }
-    };
-    request.send();
-}
 
 
-function displaySecretWord() {
-    let d = document.getElementById("word");
-    let txt = word.charAt(0);
-    for (var i = 1; i < word.length-1; i++) {
-        if(validLetters.includes(word.charAt(i))) {
-            txt += ' ' + word.charAt(i)
+        function displayLetters() {
+            let txt = "";
+            for (let i = 97; i < 123; i++) {
+                let ch = String.fromCharCode(i);
+                if (validLetters.includes(ch)) {
+                    txt += "<span class='valid-letter'>" + ch + "</span> ";
+                } else if (invalidLetters.includes(ch)) {
+                    txt += "<span class='invalid-letter'>" + ch + "</span> ";
+                } else if (gameOver) {
+                    txt += "<span>" + ch + "</span> ";
+                } else {
+                    txt += "<a href='#' onclick='playLetter(" + i + ");'>" + ch + "</a> ";
+                }
+            }
+            document.getElementById("letter-list").innerHTML = txt;
         }
-        else {
-            txt += ' _ ';
+
+
+        function playLetter(i) {
+            ch = String.fromCharCode(i);
+            if (validLetters.includes(ch) || invalidLetters.includes(ch)) {
+                return;
+            }
+
+            if (word.includes(ch)) {
+                validLetters.push(ch);
+            } else {
+                invalidLetters.push(ch);
+                imageloop += 1;
+                changeImg();
+            }
+
+            displaySecretWord();
+            displayLetters();
+
+            checkIfFound();
         }
-    }
-    txt += ' ' + word.charAt(word.length-1);
-    d.innerHTML = txt;
-}
 
 
-function displayLetters() {
-    let txt = "";
-    for(let i = 97; i < 123; i++) {
-        let ch = String.fromCharCode(i);
-        if(validLetters.includes(ch)) {
-            txt += "<span class='valid-letter'>" + ch + "</span> ";
+        function checkIfFound() {
+            let w = document.getElementById("word").innerHTML;
+            w = w.replace(/\s/g, '');
+            if (word == w) {
+                alert("YOU WON");
+                gameOver = true;
+                displayLetters();
+            } else if (invalidLetters.length >= 6) {
+                alert("GAME OVER");
+                gameOver = true;
+                displayLetters();
+            }
         }
-        else if(invalidLetters.includes(ch)) {
-            txt += "<span class='invalid-letter'>" + ch + "</span> ";
+    </script>
+
+    <h2 class="title">Hangman</h2>
+    <style>
+        .title {
+            font-style: italic;
+            color: orange;
+            text-align: center;
+            background-color: green;
         }
-        else if(gameOver) {
-            txt += "<span>" + ch + "</span> ";
-        }
-        else {
-            txt += "<a href='#' onclick='playLetter(" + i + ");'>" + ch + "</a> ";
-        }
-    }
-    document.getElementById("letter-list").innerHTML = txt;
-}
+    </style>
+    <br>
+    <div class="container">
+
+        <img name="slide" width="1100" height="500">
+        <br><br>
+
+        <div id="start-button"><button type="button" class="btn btn-success" id="startOver" onclick="startOver()">Start</button></div>
 
 
-function playLetter(i) {
-    ch = String.fromCharCode(i);
-    if(validLetters.includes(ch) || invalidLetters.includes(ch)) {
-        return;
-    }
+        <div id="word"></div>
+        <div id="letter-list"></div>
 
-    if(word.includes(ch)) {
-        validLetters.push(ch);
-    }
-    else {
-        invalidLetters.push(ch);
-        imageloop += 1;
-        changeImg();
-    }
-
-    displaySecretWord();
-    displayLetters();
-
-    checkIfFound();
-}
+        <div id="result"></div>
 
 
-function checkIfFound() {
-    let w = document.getElementById("word").innerHTML;
-    w = w.replace(/\s/g, '');
-    if(word == w) {
-        alert("YOU WON");
-        gameOver = true;
-        displayLetters();
-    }
-    else if(invalidLetters.length >= 6) {
-        alert("GAME OVER");
-        gameOver = true;
-        displayLetters();
-    }
-}
-
-</script>
-
-<h2 class="title">Hangman</h2>
-<style>
-    .title{
-    font-style: italic;
-    color:orange;
-    text-align: center;
-    background-color: green;
-}
-</style>
-<br>
-<div class="container">
-    
-<img name="slide" width="1100" height="500">
-<br><br>
-
-<div id="start-button"><button type="button" class="btn btn-success" id="startOver" onclick="startOver()">Start</button></div>
-
-
-<div id="word"></div>
-<div id="letter-list"></div>
-
-<div id="result"></div>
-
-
-</div>
-<br>
-<h5 id="copyright">Made by: Arian Kapllanaj</h5>
+    </div>
+    <br>
+    <h5 id="copyright">Made by: Arian Kapllanaj</h5>
 </body>
 <style>
-    body{
-        background-color:rgb(184, 240, 147);
+    body {
+        background-color: rgb(184, 240, 147);
     }
-
-    #copyright{
+    
+    #copyright {
         text-align: right;
     }
-
-    #letter-list{
+    
+    #letter-list {
         color: red;
     }
-
-    #start-button{
+    
+    #start-button {
         text-align: center;
     }
 </style>
+
 </html>
